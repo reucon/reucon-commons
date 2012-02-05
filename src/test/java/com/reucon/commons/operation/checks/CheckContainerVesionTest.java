@@ -52,7 +52,7 @@ public class CheckContainerVesionTest
     @Test
     public void testNoSlash() throws Exception
     {
-        when(env.getContainerInfo()).thenReturn("something");
+        when(env.getContainerInfo()).thenReturn("GlassFish Server Open Source Edition 3.1.1");
         final CheckContainerVersion check = new CheckContainerVersion("8.0.0");
         final EnvironmentCheckResult result = check.run(env);
 

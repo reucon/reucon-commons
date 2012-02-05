@@ -59,6 +59,13 @@ public class EnvironmentCheckResult implements Serializable
         return new EnvironmentCheckResult(false, checkClass.getSimpleName(), resolveMessage(key, params), key, params);
     }
 
+    public static EnvironmentCheckResult error(Class<? extends EnvironmentCheck> checkClass, Throwable t)
+    {
+        final String key = "EnvironmentCheck.error";
+        final Object[] params = {t.toString()};
+        return new EnvironmentCheckResult(false, checkClass.getSimpleName(), resolveMessage(key, params), key, params);
+    }
+
     private static String resolveMessage(String key, Object[] params)
     {
         try

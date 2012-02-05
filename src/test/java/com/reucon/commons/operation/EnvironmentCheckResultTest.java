@@ -42,4 +42,11 @@ public class EnvironmentCheckResultTest
         final EnvironmentCheckResult result = EnvironmentCheckResult.failedWithMessage(CheckJvmVersion.class, "nonExistingKey");
         assertEquals("unknown", result.getMessage());
     }
+
+    @Test
+    public void testError() throws Exception
+    {
+        final EnvironmentCheckResult result = EnvironmentCheckResult.error(CheckJvmVersion.class, new IllegalArgumentException("message from exception"));
+        assertEquals("java.lang.IllegalArgumentException: message from exception", result.getMessage());
+    }
 }

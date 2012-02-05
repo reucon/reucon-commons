@@ -6,6 +6,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
+
 public class EnvironmentCheckerTest
 {
     class SuccessCheck implements EnvironmentCheck
@@ -26,8 +28,17 @@ public class EnvironmentCheckerTest
         }
     }
 
+    class ErrorCheck implements EnvironmentCheck
+    {
+        @Override
+        public EnvironmentCheckResult run(OperationalEnvironment environment)
+        {
+            throw new RuntimeException("This check just exploded");
+        }
+    }
+
     private EnvironmentChecker checker;
-    
+
     @Before
     public void setUp() throws Exception
     {
@@ -65,5 +76,18 @@ public class EnvironmentCheckerTest
         checker.setThrowExceptionOnFailure(false);
 
         checker.check();
+    }
+
+    @Test
+    public void testCheckWithError() throws Exception
+    {
+        final List<EnvironmentCheck> checks = new ArrayList<>();
+        checks.add(new SuccessCheck());
+        checks.add(new ErrorCheck());
+        checker.setChecks(checks);
+        checker.setThrowExceptionOnFailure(false);
+
+        List<EnvironmentCheckResult> results = checker.check();
+        assertEquals("java.lang.RuntimeException: This check just exploded", results.get(1).getMessage());
     }
 }

@@ -76,7 +76,7 @@ public class EnvironmentChecker
 
         for (EnvironmentCheck check : checks)
         {
-            final EnvironmentCheckResult result = check.run(environment);
+            final EnvironmentCheckResult result = runCheck(environment, check);
             results.add(result);
             if (result.isPassed())
             {
@@ -88,6 +88,19 @@ public class EnvironmentChecker
             }
         }
         return results;
+    }
+
+    private EnvironmentCheckResult runCheck(OperationalEnvironment environment, EnvironmentCheck check)
+    {
+        try
+        {
+            return check.run(environment);
+        }
+        catch (Exception e)
+        {
+            logger.warn(String.format("Unable to execute check %s", check.getClass()), e);
+            return EnvironmentCheckResult.error(check.getClass(), e);
+        }
     }
 
     /**
