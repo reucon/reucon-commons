@@ -37,4 +37,15 @@ public class CheckJvmVendorTest
 
         assertTrue(result.isFailed());
     }
+
+    @Test
+    public void testNull() throws Exception
+    {
+        when(env.getJvmVendor()).thenReturn(null);
+
+        final CheckJvmVendor check = new CheckJvmVendor("Oracle Inc\\.");
+        final EnvironmentCheckResult result = check.run(env);
+
+        assertTrue(result.isFailed());
+    }
 }

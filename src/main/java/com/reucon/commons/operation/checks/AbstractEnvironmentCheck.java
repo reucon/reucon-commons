@@ -26,9 +26,14 @@ public abstract class AbstractEnvironmentCheck implements EnvironmentCheck
     {
         return EnvironmentCheckResult.failedWithMessage(getClass(), messageKey, params);
     }
-    
+
     protected EnvironmentCheckResult checkPatternMatches(Pattern pattern, String actual)
     {
+        if (actual == null)
+        {
+            return failed(pattern.pattern(), actual);
+        }
+
         final Matcher matcher = pattern.matcher(actual);
 
         if (matcher.matches())
@@ -43,7 +48,7 @@ public abstract class AbstractEnvironmentCheck implements EnvironmentCheck
 
     protected EnvironmentCheckResult checkVersionIsAtLeast(VersionNumber requiredVersion, VersionNumber actualVersion)
     {
-        if (actualVersion.isAtLeast(requiredVersion))
+        if (actualVersion != null && actualVersion.isAtLeast(requiredVersion))
         {
             return passed(requiredVersion, actualVersion);
         }

@@ -82,4 +82,16 @@ public class CheckJvmVersionTest
         assertTrue(result.isFailed());
         assertEquals("Detected JVM version 1.7.0_04-ea is an early access version", result.getMessage());
     }
+
+    @Test
+    public void testNull() throws Exception
+    {
+        env = mock(OperationalEnvironment.class);
+        when(env.getJvmVersion()).thenReturn(null);
+
+        final CheckJvmVersion check = new CheckJvmVersion("1.7.0_03");
+        final EnvironmentCheckResult result = check.run(env);
+
+        assertTrue(result.isFailed());
+    }
 }

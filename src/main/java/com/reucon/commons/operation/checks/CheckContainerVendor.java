@@ -26,6 +26,11 @@ public class CheckContainerVendor extends AbstractEnvironmentCheck
     protected String determineVendor(final OperationalEnvironment environment)
     {
         final String info = environment.getContainerInfo();
+        if (info == null)
+        {
+            return null;
+        }
+
         final int slashPosition = info.indexOf("/");
         if(slashPosition < 0)
         {

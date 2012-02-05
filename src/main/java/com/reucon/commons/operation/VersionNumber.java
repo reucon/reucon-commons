@@ -57,6 +57,11 @@ public class VersionNumber implements Comparable<VersionNumber>, Serializable
      */
     public static VersionNumber fromJvmVersion(final String jvmString)
     {
+        if (jvmString == null)
+        {
+            return null;
+        }
+
         final Matcher matcher = JVM_PATTERN.matcher(jvmString);
 
         if (matcher.matches())

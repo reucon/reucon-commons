@@ -5,6 +5,7 @@ import com.reucon.commons.operation.OperationalEnvironment;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -36,5 +37,16 @@ public class CheckContainerVendorTest
         final EnvironmentCheckResult result = check.run(env);
 
         assertTrue(result.isFailed());
+    }
+
+    @Test
+    public void testNull() throws Exception
+    {
+        when(env.getContainerInfo()).thenReturn(null);
+        final CheckContainerVendor check = new CheckContainerVendor("Apache Tomcat");
+        final EnvironmentCheckResult result = check.run(env);
+
+        assertTrue(result.isFailed());
+        assertEquals("Detected container vendor null does not match required pattern Apache Tomcat", result.getMessage());
     }
 }
