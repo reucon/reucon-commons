@@ -31,22 +31,25 @@
     <distributionManagement>
         <repository>
             <id>reucon</id>
-            <url>https://secure.reucon.net/nexus/content/repositories/opensource</url>
+            <url>https://nexus.reucon.com/content/repositories/opensource</url>
         </repository>
         <snapshotRepository>
             <id>reucon</id>
-            <url>https://secure.reucon.net/nexus/content/repositories/opensource-snapshots</url>
+            <url>https://nexus.reucon.com/content/repositories/opensource-snapshots</url>
         </snapshotRepository>
         <site>
             <id>reucon</id>
-            <url>dav:https://secure.reucon.net/maven/projects/public/${project.artifactId}/${project.version}</url>
+            <url>dav:https://maven.reucon.com/projects/public/${project.artifactId}/${project.version}</url>
         </site>
     </distributionManagement>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>3.1.0.RELEASE</spring.version>
-        <slf4j.version>1.6.4</slf4j.version>
-        <logback.version>1.0.0</logback.version>
+        <spring.version>3.1.1.RELEASE</spring.version>
+        <slf4j.version>1.6.6</slf4j.version>
+        <logback.version>1.0.6</logback.version>
+        <junit.version>4.10</junit.version>
+        <hamcrest.version>1.2.1</hamcrest.version>
+        <mockito.version>1.9.0</mockito.version>
     </properties>
     <dependencies>
         <dependency>
@@ -81,25 +84,25 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit-dep</artifactId>
-            <version>4.10</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-core</artifactId>
-            <version>1.2.1</version>
+            <version>${hamcrest.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
-            <version>1.2.1</version>
+            <version>${hamcrest.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>1.9.0</version>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
