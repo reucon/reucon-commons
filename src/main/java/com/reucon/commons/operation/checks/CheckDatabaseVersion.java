@@ -24,6 +24,10 @@ public class CheckDatabaseVersion extends AbstractEnvironmentCheck
 
     protected VersionNumber determineVersion(OperationalEnvironment environment)
     {
+        if (environment.getDatabaseMajorVersion() == null || environment.getDatabaseMinorVersion() == null)
+        {
+            return null;
+        }
         return new VersionNumber(environment.getDatabaseMajorVersion(), environment.getDatabaseMinorVersion());
     }
 }
