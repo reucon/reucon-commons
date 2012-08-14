@@ -4,7 +4,7 @@
     <artifactId>reucon-commons</artifactId>
     <packaging>jar</packaging>
     <name>reucon commons</name>
-    <version>2.1.2.CI-SNAPSHOT</version>
+    <version>2.1.2.RELEASE</version>
     <url>https://github.com/reucon/reucon-commons</url>
     <licenses>
         <license>
