@@ -2,6 +2,8 @@
 *.ipr
 *.iws
 target
+.idea
 .classpath
 .project
+atlassian-ide-plugin.xml
 .settings/*
