@@ -31,6 +31,7 @@ public class MdcInsertingServletFilter implements Filter
 {
     public static final String REQUEST_REMOTE_HOST_MDC_KEY = "req.remoteHost";
     public static final String REQUEST_USER_AGENT_MDC_KEY = "req.userAgent";
+    public static final String REQUEST_METHOD = "req.method";
     public static final String REQUEST_REQUEST_URI = "req.requestURI";
     public static final String REQUEST_QUERY_STRING = "req.queryString";
     public static final String REQUEST_REQUEST_URL = "req.requestURL";
@@ -85,6 +86,7 @@ public class MdcInsertingServletFilter implements Filter
         {
             // from MDCInsertingServletFilter
             final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+            MDC.put(REQUEST_METHOD, httpServletRequest.getMethod());
             MDC.put(REQUEST_REQUEST_URI, httpServletRequest.getRequestURI());
             final StringBuffer requestURL = httpServletRequest.getRequestURL();
             if (requestURL != null)
