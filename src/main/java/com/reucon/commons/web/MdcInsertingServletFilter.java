@@ -6,6 +6,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Servlet filter based on logback's MDCInsertingServletFilter with support the following additional keys:
@@ -57,18 +58,26 @@ public class MdcInsertingServletFilter implements Filter
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
     {
-        insertIntoMDC(request);
+        final Map originalContextMap = MDC.getCopyOfContextMap();
         try
         {
+            insertBasicProperties(request);
             chain.doFilter(request, response);
         }
         finally
         {
-            clearMDC();
+            if (originalContextMap == null)
+            {
+                MDC.clear();
+            }
+            else
+            {
+                MDC.setContextMap(originalContextMap);
+            }
         }
     }
 
-    void insertIntoMDC(ServletRequest request)
+    protected void insertBasicProperties(ServletRequest request)
     {
         MDC.put(REQUEST_REMOTE_HOST_MDC_KEY, request.getRemoteHost());
 
@@ -94,24 +103,20 @@ public class MdcInsertingServletFilter implements Filter
             {
                 MDC.put(REQUEST_SESSION_ID, session.getId());
             }
+
+            insertAdditionalProperties(httpServletRequest);
         }
     }
 
-    void clearMDC()
+    /**
+     * Override this method to insert additional properties into MDC.
+     */
+    protected void insertAdditionalProperties(HttpServletRequest request)
     {
-        MDC.remove(REQUEST_REMOTE_HOST_MDC_KEY);
-        MDC.remove(REQUEST_REQUEST_URI);
-        MDC.remove(REQUEST_QUERY_STRING);
-        MDC.remove(REQUEST_REQUEST_URL);
-        MDC.remove(REQUEST_USER_AGENT_MDC_KEY);
-        MDC.remove(REQUEST_X_FORWARDED_FOR);
 
-        MDC.remove(REQUEST_REQUEST_PATH);
-        MDC.remove(REQUEST_REMOTE_USER);
-        MDC.remove(REQUEST_SESSION_ID);
     }
 
-    String getRequestPath(HttpServletRequest request)
+    protected String getRequestPath(HttpServletRequest request)
     {
         final StringBuilder sb = new StringBuilder();
         final String servletPath = request.getServletPath();
