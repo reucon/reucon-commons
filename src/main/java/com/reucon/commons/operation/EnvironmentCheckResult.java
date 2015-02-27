@@ -151,11 +151,6 @@ public class EnvironmentCheckResult implements Serializable
     @Override
     public String toString()
     {
-        final StringBuilder sb = new StringBuilder();
-        sb.append(check).append(" ");
-        sb.append(passed ? "passed" : "failed");
-        sb.append(": ").append(message);
-        sb.append(" (").append(messageKey).append(')');
-        return sb.toString();
+        return check + " " + (passed ? "passed" : "failed") + ": " + message + " (" + messageKey + ')';
     }
 }

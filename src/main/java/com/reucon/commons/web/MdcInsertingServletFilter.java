@@ -59,10 +59,16 @@ public class MdcInsertingServletFilter implements Filter
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
     {
-        final Map originalContextMap = MDC.getCopyOfContextMap();
+        final Map<String, String> originalContextMap = MDC.getCopyOfContextMap();
         try
         {
             insertBasicProperties(request);
+
+            if (request instanceof HttpServletRequest)
+            {
+                final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+                insertAdditionalProperties(httpServletRequest);
+            }
             chain.doFilter(request, response);
         }
         finally
@@ -105,8 +111,6 @@ public class MdcInsertingServletFilter implements Filter
             {
                 MDC.put(REQUEST_SESSION_ID, session.getId());
             }
-
-            insertAdditionalProperties(httpServletRequest);
         }
     }
 
