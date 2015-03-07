@@ -15,6 +15,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import javax.servlet.ServletInputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -113,11 +114,7 @@ public class ExceptionReportGenerator
                 exceptionsDir.mkdirs();
             }
             writer = new FileWriter(filename);
-            writer.write("Exception Id:          " + id + "\n");
-            writer.write("Time:                  " + dateFormat.format(now) + "\n\n");
-            writeContext(writer, request);
-            writer.write("Exception:\n\n");
-            writeThrowable(writer, ex);
+            writeExceptionReport(writer, id, now, request, ex);
         }
         finally
         {
@@ -128,9 +125,18 @@ public class ExceptionReportGenerator
         }
     }
 
+    void writeExceptionReport(Writer writer, String id, Date now, HttpServletRequest request, Exception ex) throws IOException
+    {
+        writer.write("Exception Id:          " + id + "\n");
+        writer.write("Time:                  " + dateFormat.format(now) + "\n\n");
+        writeContext(writer, request);
+        writer.write("Exception:\n\n");
+        writeThrowable(writer, ex);
+    }
+
     /**
      * Creates a new exception id for the given request. The id is made of the
-     * requet's context path (the path where the webapp is deployed to) and a
+     * request's context path (the path where the webapp is deployed to) and a
      * random {@linkplain UUID}.
      * 
      * @param request the request to create the id for.
@@ -177,7 +183,7 @@ public class ExceptionReportGenerator
     {
         List<String> directoryNamesToTry;
 
-        directoryNamesToTry = new ArrayList<String>();
+        directoryNamesToTry = new ArrayList<>();
         if (logDirectory != null)
         {
             directoryNamesToTry.add(logDirectory);
@@ -288,6 +294,22 @@ public class ExceptionReportGenerator
             String attributeName = (String) attributeNames.nextElement();
             writer.write(attributeName + ": " + request.getAttribute(attributeName) + "\n");
         }
+        writer.write("\n\n");
+        
+        writer.write("Request Payload:\n\n");
+        
+        final ServletInputStream inputStream = request.getInputStream();
+        try
+        {
+            inputStream.reset();
+            //TODO
+            writer.write("input....");
+        }
+        catch (IOException ex)
+        {
+            writer.write(" -- not supported -- ");
+        }
+        
         writer.write("\n\n");
 
         writer.write("Session Attributes:\n\n");
