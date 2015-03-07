@@ -95,6 +95,7 @@ public class SpringExceptionReportGenerator extends SimpleMappingExceptionResolv
         exceptionReportGenerator.setLogDirectory(logDirectory);
     }
 
+    @Override
     protected ModelAndView getModelAndView(String viewName, Exception ex, HttpServletRequest request)
     {
         ModelAndView mav;

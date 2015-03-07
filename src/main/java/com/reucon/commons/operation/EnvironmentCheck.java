@@ -1,7 +1,7 @@
 package com.reucon.commons.operation;
 
 /**
- * Inidividual environment check.
+ * Individual environment check.
  */
 public interface EnvironmentCheck
 {

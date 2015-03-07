@@ -41,6 +41,7 @@ public class OptionalFilter implements Filter
     private final Log logger = LogFactory.getLog(getClass());
     private Filter delegate;
 
+    @Override
     public void init(FilterConfig filterConfig) throws ServletException
     {
         final String targetClassName;
@@ -79,6 +80,7 @@ public class OptionalFilter implements Filter
         delegate.init(filterConfig);
     }
 
+    @Override
     public void destroy()
     {
         if (delegate != null)
@@ -87,6 +89,7 @@ public class OptionalFilter implements Filter
         }
     }
 
+    @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
             ServletException
     {
