@@ -23,6 +23,12 @@
             <email>stefan.reuter at reucon.com</email>
             <timezone>+1</timezone>
         </developer>
+        <developer>
+            <name>Thomas Kruse</name>
+            <id>tkruse</id>
+            <email>thomas.kruse at reucon.com</email>
+            <timezone>+1</timezone>
+        </developer>
     </developers>
     <scm>
         <connection>scm:git:git://github.com/reucon/reucon-commons.git</connection>
