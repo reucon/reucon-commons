@@ -1,5 +1,6 @@
 package com.reucon.commons.web.exception;
 
+import com.reucon.commons.web.exception.storage.FilesystemStorage;
 import com.reucon.commons.web.exception.model.ExceptionReport;
 import java.io.CharArrayWriter;
 import java.io.IOException;
@@ -22,6 +23,7 @@ public class ExceptionReportGeneratorTest
     private String exceptionId;
     private Exception exception;
     private CharArrayWriter writer;
+    private FilesystemStorage storage;
 
     @Before
     public void setUp() throws Exception
@@ -34,12 +36,15 @@ public class ExceptionReportGeneratorTest
         exceptionId = "ID:123:456";
         
         writer = new CharArrayWriter();
+        
+        storage = new FilesystemStorage(writer);
     }
 
     
     void writeExceptionReport() throws IOException
     {
-        reportGenerator.writeExceptionReport(writer, date, new ExceptionReport(exceptionId, exception, httpServletRequest));
+        ExceptionReport report = new ExceptionReport(exceptionId, exception, httpServletRequest);
+        reportGenerator.writeExceptionReport(storage, report, exception);
     }
     
     @Test

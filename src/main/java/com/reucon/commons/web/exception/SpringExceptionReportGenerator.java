@@ -1,6 +1,9 @@
 package com.reucon.commons.web.exception;
 
-import com.reucon.commons.web.exception.ExceptionReportGenerator;
+import java.io.CharArrayWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.servlet.ModelAndView;
@@ -112,8 +115,42 @@ public class SpringExceptionReportGenerator extends SimpleMappingExceptionResolv
         }
         if (mav != null && stackTraceAttribute != null)
         {
-            mav.addObject(stackTraceAttribute, exceptionReportGenerator.getStackTrace(ex));
+            mav.addObject(stackTraceAttribute, getStackTrace(ex));
         }
         return mav;
     }
+    
+    /**
+     * Returns the full stack trace as a string.
+     * 
+     * @param throwable the trowable to create the stacktrace for.
+     * @return the full stack trace as a string.
+     */
+    String getStackTrace(Throwable throwable)
+    {
+        CharArrayWriter writer;
+
+        writer = new CharArrayWriter();
+        try
+        {
+            writeThrowable(writer, throwable);
+        }
+        catch (IOException e)
+        {
+            // ignore
+        }
+
+        return writer.toString();
+    }
+
+    void writeThrowable(Writer writer, Throwable throwable) throws IOException
+    {
+        throwable.printStackTrace(new PrintWriter(writer));
+        if (throwable.getCause() != null)
+        {
+            writer.write("\nCause:\n\n");
+            writeThrowable(writer, throwable.getCause());
+        }
+    }
+
 }
