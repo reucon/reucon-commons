@@ -2,6 +2,7 @@ package com.reucon.commons.web.exception;
 
 import com.reucon.commons.web.exception.model.ExceptionReport;
 import java.io.CharArrayWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.junit.Before;
@@ -36,16 +37,22 @@ public class ExceptionReportGeneratorTest
     }
 
     
-    @Test
-    public void writeShouldNotThrow() throws Exception
+    void writeExceptionReport() throws IOException
     {
         reportGenerator.writeExceptionReport(writer, date, new ExceptionReport(exceptionId, exception, httpServletRequest));
     }
     
     @Test
+    public void writeShouldNotThrow() throws Exception
+    {
+        writeExceptionReport();
+    }
+
+    
+    @Test
     public void reportContainsExceptionId() throws Exception
     {
-        reportGenerator.writeExceptionReport(writer, date, new ExceptionReport(exceptionId, exception, httpServletRequest));
+        writeExceptionReport();
         
         final String report = writer.toString();
         
@@ -56,7 +63,7 @@ public class ExceptionReportGeneratorTest
     public void reportContainsHeader() throws Exception
     {
         httpServletRequest.addHeader("firstHeader", "first Value");
-        reportGenerator.writeExceptionReport(writer, date, new ExceptionReport(exceptionId, exception, httpServletRequest));
+        writeExceptionReport();
         
         final String report = writer.toString();
         
@@ -68,7 +75,7 @@ public class ExceptionReportGeneratorTest
     {
         httpServletRequest.addHeader("firstHeader", "first Value");
         httpServletRequest.addHeader("firstHeader", "second Value");
-        reportGenerator.writeExceptionReport(writer, date, new ExceptionReport(exceptionId, exception, httpServletRequest));
+        writeExceptionReport();
         
         final String report = writer.toString();
         
@@ -80,7 +87,7 @@ public class ExceptionReportGeneratorTest
     public void reportContainsParameter() throws Exception
     {
         httpServletRequest.setParameter("param", "parameter value");
-        reportGenerator.writeExceptionReport(writer, date, new ExceptionReport(exceptionId, exception, httpServletRequest));
+        writeExceptionReport();
         
         final String report = writer.toString();
         
@@ -91,7 +98,7 @@ public class ExceptionReportGeneratorTest
     public void reportContainsParameterArray() throws Exception
     {
         httpServletRequest.setParameter("param", new String[]{"parameter value", "value 2"});
-        reportGenerator.writeExceptionReport(writer, date, new ExceptionReport(exceptionId, exception, httpServletRequest));
+        writeExceptionReport();
         
         final String report = writer.toString();
         
@@ -104,7 +111,7 @@ public class ExceptionReportGeneratorTest
     {
         httpServletRequest.setAttribute("attribute 1", "value1");
         httpServletRequest.setAttribute("attribute 2", "value2");
-        reportGenerator.writeExceptionReport(writer, date, new ExceptionReport(exceptionId, exception, httpServletRequest));
+        writeExceptionReport();
         
         final String report = writer.toString();
         
@@ -118,7 +125,7 @@ public class ExceptionReportGeneratorTest
         final MockHttpSession session = new MockHttpSession();
         httpServletRequest.setSession(session);
         
-        reportGenerator.writeExceptionReport(writer, date, new ExceptionReport(exceptionId, exception, httpServletRequest));
+        writeExceptionReport();
         
         final String report = writer.toString();
         
@@ -134,7 +141,7 @@ public class ExceptionReportGeneratorTest
         
         httpServletRequest.setSession(session);
         
-        reportGenerator.writeExceptionReport(writer, date, new ExceptionReport(exceptionId, exception, httpServletRequest));
+        writeExceptionReport();
         
         final String report = writer.toString();
         
