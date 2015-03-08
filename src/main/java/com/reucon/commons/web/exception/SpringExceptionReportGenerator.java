@@ -1,5 +1,6 @@
-package com.reucon.commons.web;
+package com.reucon.commons.web.exception;
 
+import com.reucon.commons.web.exception.ExceptionReportGenerator;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.servlet.ModelAndView;
