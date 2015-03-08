@@ -1,6 +1,7 @@
 package com.reucon.commons.web.exception;
 
 import com.reucon.commons.web.exception.model.ExceptionReport;
+import com.reucon.commons.web.exception.storage.FilesystemStorage;
 import com.reucon.commons.web.exception.storage.MemoryStorage;
 import java.io.CharArrayWriter;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import org.springframework.mock.web.MockHttpSession;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.containsString;
+import org.junit.Ignore;
 
 public class ExceptionReportGeneratorTest
 {
@@ -45,6 +47,14 @@ public class ExceptionReportGeneratorTest
         reportGenerator.writeExceptionReport(storage, report, exception);
         
         writer = storage.getLastReport().exceptionMetadataWriter();
+    }
+    
+    @Ignore
+    @Test
+    public void filesystemWrite() throws Exception
+    {
+        final ExceptionReport report = new ExceptionReport(exceptionId, exception, httpServletRequest);
+        reportGenerator.writeExceptionReport(new FilesystemStorage(), report, exception);
     }
     
     @Test

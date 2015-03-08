@@ -4,16 +4,11 @@ import com.reucon.commons.web.exception.model.ExceptionReport;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Writer;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Provides storage for exception reports
@@ -47,8 +42,6 @@ public class FilesystemStorage extends ExceptionStorage
     @Override
     public ExceptionStorageEntry saveReport(ExceptionReport exceptionReport)
     {
-        final Date now = Calendar.getInstance().getTime();
-        
         for (String dirname : getDirectoryNamesToTry())
         {
             File exceptionsDir = new File(dirname);
@@ -59,16 +52,8 @@ public class FilesystemStorage extends ExceptionStorage
             
             final String filename = exceptionReport.getId() + ".log";
             final FilesystemStorageEntry filesystemStorageEntry = new FilesystemStorageEntry(dirname, filename);
+            return filesystemStorageEntry;
             
-            try
-            {
-                writeExceptionReport(now, filesystemStorageEntry, exceptionReport);
-                return filesystemStorageEntry;
-            }
-            catch (IOException e)
-            {
-                return null;
-            }
         }
 
         return null;
@@ -108,10 +93,6 @@ public class FilesystemStorage extends ExceptionStorage
     }
     
     
-
-    
-
-   
     /**
      * Returns a list of directories to try to store the report in.
      * <p>
@@ -164,6 +145,4 @@ public class FilesystemStorage extends ExceptionStorage
 
         return directoryNamesToTry;
     }
-
-    
 }

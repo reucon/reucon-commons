@@ -1,10 +1,11 @@
 package com.reucon.commons.web.exception;
 
-import com.reucon.commons.web.exception.renderer.StringExceptionRenderer;
 import com.reucon.commons.web.exception.storage.FilesystemStorage;
 import com.reucon.commons.web.exception.model.ExceptionReport;
+import com.reucon.commons.web.exception.renderer.StringExceptionRenderer;
 import com.reucon.commons.web.exception.storage.ExceptionStorage;
 import com.reucon.commons.web.exception.storage.ExceptionStorageEntry;
+import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -52,15 +53,21 @@ public class ExceptionReportGenerator
     {
         
         final ExceptionReport exceptionReport = new ExceptionReport(ex, request);
-        return writeExceptionReport(storage, exceptionReport, ex);
+        try
+        {
+            return writeExceptionReport(storage, exceptionReport, ex);
+        }
+        catch (IOException e)
+        {
+            return null;
+        }
     }
 
-    String writeExceptionReport(final ExceptionStorage storage, final ExceptionReport exceptionReport, Exception ex)
+    String writeExceptionReport(final ExceptionStorage storage, final ExceptionReport exceptionReport, Exception ex) throws IOException
     {
-        //final StringExceptionRenderer stringExceptionRenderer = new StringExceptionRenderer();
-        //final String writtenToDirectoryName =  stringExceptionRenderer.render(exceptionReport, storage);
+        final StringExceptionRenderer stringExceptionRenderer = determineRenderer(exceptionReport);
+        final ExceptionStorageEntry report  = stringExceptionRenderer.render(exceptionReport, storage);
         
-        final ExceptionStorageEntry report = storage.saveReport(exceptionReport);
         final String writtenToDirectoryName = report.location();
         
         if (writtenToDirectoryName != null)
@@ -74,5 +81,10 @@ public class ExceptionReportGenerator
         }
 
         return exceptionReport.getId();
-    }    
+    }
+    
+    StringExceptionRenderer determineRenderer(ExceptionReport exceptionReport)
+    {
+        return new StringExceptionRenderer();
+    }
 }

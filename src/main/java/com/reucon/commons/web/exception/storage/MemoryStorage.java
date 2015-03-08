@@ -48,8 +48,6 @@ public class MemoryStorage extends ExceptionStorage
             entries.put(exceptionReport.getId(), entry);
             lastAdded = entry;
         }
-        writeExceptionReport(entry.exceptionMetadataWriter(), new Date(), exceptionReport);
-        
         return entry;
     }
     
