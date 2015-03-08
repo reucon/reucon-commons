@@ -1,5 +1,7 @@
 package com.reucon.commons.web.exception.model;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,7 +14,6 @@ import javax.servlet.http.HttpSession;
 
 /**
  * Model class holding the data of an exception report.
- * 
  */
 public class ExceptionReport implements Serializable
 {
@@ -51,6 +52,8 @@ public class ExceptionReport implements Serializable
     private Long sessionLastAccessedTime;
     private Integer sessionMaxInactiveInterval;
     private Map<String, Object> sessionAttributes;
+    
+    transient private InputStream inputStream;
             
     public ExceptionReport(Throwable exception, HttpServletRequest request)
     {
@@ -113,6 +116,14 @@ public class ExceptionReport implements Serializable
             );
         }
         
+        try
+        {
+            this.inputStream = request.getInputStream();
+        }
+        catch (IOException ex)
+        {
+            //
+        }
     }
     
 

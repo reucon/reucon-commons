@@ -1,7 +1,10 @@
 package com.reucon.commons.web.exception;
 
+import com.reucon.commons.web.exception.renderer.StringExceptionRenderer;
 import com.reucon.commons.web.exception.storage.FilesystemStorage;
 import com.reucon.commons.web.exception.model.ExceptionReport;
+import com.reucon.commons.web.exception.storage.ExceptionStorage;
+import com.reucon.commons.web.exception.storage.ExceptionStorageEntry;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -52,10 +55,13 @@ public class ExceptionReportGenerator
         return writeExceptionReport(storage, exceptionReport, ex);
     }
 
-    String writeExceptionReport(final FilesystemStorage storage, final ExceptionReport exceptionReport, Exception ex)
+    String writeExceptionReport(final ExceptionStorage storage, final ExceptionReport exceptionReport, Exception ex)
     {
-        final String writtenToDirectoryName = storage.writeExceptionReport(exceptionReport);
+        //final StringExceptionRenderer stringExceptionRenderer = new StringExceptionRenderer();
+        //final String writtenToDirectoryName =  stringExceptionRenderer.render(exceptionReport, storage);
         
+        final ExceptionStorageEntry report = storage.saveReport(exceptionReport);
+        final String writtenToDirectoryName = report.location();
         
         if (writtenToDirectoryName != null)
         {
