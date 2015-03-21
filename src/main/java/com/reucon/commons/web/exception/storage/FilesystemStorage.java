@@ -2,12 +2,11 @@ package com.reucon.commons.web.exception.storage;
 
 import com.reucon.commons.web.exception.model.ExceptionReport;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,7 +39,7 @@ public class FilesystemStorage extends ExceptionStorage
     }
     
     @Override
-    public ExceptionStorageEntry saveReport(ExceptionReport exceptionReport)
+    public ExceptionStorageEntry allocate(ExceptionReport exceptionReport)
     {
         for (String dirname : getDirectoryNamesToTry())
         {
@@ -84,10 +83,10 @@ public class FilesystemStorage extends ExceptionStorage
         }
 
         @Override
-        public Writer exceptionPayloadWriter() throws IOException
+        public FileOutputStream exceptionPayloadOutputStream() throws IOException
         {
-            FileWriter fileWriter = new FileWriter(path + File.separator + basename + ".bin");
-            return fileWriter;
+            FileOutputStream os = new FileOutputStream(path + File.separator + basename + ".bin");
+            return os;
         }
         
     }

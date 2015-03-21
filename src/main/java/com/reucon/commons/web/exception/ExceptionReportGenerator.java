@@ -65,8 +65,8 @@ public class ExceptionReportGenerator
 
     String writeExceptionReport(final ExceptionStorage storage, final ExceptionReport exceptionReport, Exception ex) throws IOException
     {
-        final StringExceptionRenderer stringExceptionRenderer = determineRenderer(exceptionReport);
-        final ExceptionStorageEntry report  = stringExceptionRenderer.render(exceptionReport, storage);
+        final StringExceptionRenderer exceptionRenderer = determineRenderer(exceptionReport);
+        final ExceptionStorageEntry report  = exceptionRenderer.render(exceptionReport, storage);
         
         final String writtenToDirectoryName = report.location();
         

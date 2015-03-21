@@ -1,10 +1,10 @@
 package com.reucon.commons.web.exception.storage;
 
 import com.reucon.commons.web.exception.model.ExceptionReport;
+import java.io.ByteArrayOutputStream;
 import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -35,7 +35,7 @@ public class MemoryStorage extends ExceptionStorage
     }
     
     @Override
-    public ExceptionStorageEntry saveReport(ExceptionReport exceptionReport) throws IOException
+    public ExceptionStorageEntry allocate(ExceptionReport exceptionReport) throws IOException
     {
         MemoryStorageEntry entry = new MemoryStorageEntry();
         synchronized(entries)
@@ -54,12 +54,12 @@ public class MemoryStorage extends ExceptionStorage
     public static class MemoryStorageEntry implements ExceptionStorageEntry
     {
         final private CharArrayWriter metadataWriter;
-        final private CharArrayWriter payloadWriter;
+        final private ByteArrayOutputStream payloadOutputStream;
 
         public MemoryStorageEntry()
         {
             this.metadataWriter = new CharArrayWriter();
-            this.payloadWriter = new CharArrayWriter();
+            this.payloadOutputStream = new ByteArrayOutputStream();
         }
         
         @Override
@@ -71,13 +71,13 @@ public class MemoryStorage extends ExceptionStorage
         @Override
         public CharArrayWriter exceptionMetadataWriter()
         {
-            return payloadWriter;
+            return metadataWriter;
         }
 
         @Override
-        public CharArrayWriter exceptionPayloadWriter()
+        public ByteArrayOutputStream exceptionPayloadOutputStream()
         {
-            return metadataWriter;
+            return payloadOutputStream;
         }
     }
 

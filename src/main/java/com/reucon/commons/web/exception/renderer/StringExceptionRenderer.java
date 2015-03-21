@@ -4,6 +4,9 @@ import com.reucon.commons.web.exception.model.ExceptionReport;
 import com.reucon.commons.web.exception.storage.ExceptionStorage;
 import com.reucon.commons.web.exception.storage.ExceptionStorageEntry;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.text.DateFormat;
@@ -19,7 +22,7 @@ public class StringExceptionRenderer
     {
         final Date now = Calendar.getInstance().getTime();
         
-        final ExceptionStorageEntry storageEntry = storage.saveReport(exceptionReport);
+        final ExceptionStorageEntry storageEntry = storage.allocate(exceptionReport);
         writeExceptionReport(now, storageEntry, exceptionReport);
         
         return storageEntry;
@@ -30,6 +33,10 @@ public class StringExceptionRenderer
         try (Writer writer = entry.exceptionMetadataWriter())
         {
             writeExceptionReport(writer, date, exceptionReport);
+        }
+        try (OutputStream os = entry.exceptionPayloadOutputStream())
+        {
+            writePayload(os, exceptionReport);
         }
     }
     
@@ -110,23 +117,6 @@ public class StringExceptionRenderer
                 .map(e -> e.getKey()+ ": " + e.getValue().toString())
                 .collect(Collectors.joining("\n"))
             );
-        writer.write("\n");
-        
-
-//        writer.write("Request Payload:\n\n");
-//        
-//        final ServletInputStream inputStream = request.getInputStream();
-//        try
-//        {
-//            inputStream.reset();
-//            //TODO
-//            writer.write("input....");
-//        }
-//        catch (IOException ex)
-//        {
-//            writer.write(" -- not supported -- ");
-//        }
-//        
         writer.write("\n\n");
 
         writer.write("Session Attributes:\n\n");
@@ -165,6 +155,68 @@ public class StringExceptionRenderer
             writer.write("\nCause:\n\n");
             writeThrowable(writer, throwable.getCause());
         }
+    }
+
+    void writePayload(OutputStream os, ExceptionReport exceptionReport) throws IOException
+    {
+        Writer writer = new OutputStreamWriter(os);
+        writer.write("Request Payload:\n\n");
+        writer.flush();
+
+        final InputStream inputStream = exceptionReport.getInputStream();
+        if(inputStream == null)
+        {
+            writer.write("--null--");
+            writer.close();
+            return;
+        }
+        if (!isText(exceptionReport.getContentType()))
+        {
+            writer.write("@binary@");
+            writer.close();
+            return;
+        }
+        try
+        {
+            int read = 0;
+            byte[] bytes = new byte[1024];
+
+            while ((read = inputStream.read(bytes)) != -1)
+            {
+                os.write(bytes, 0, read);
+            }
+        }
+        catch (IOException ex)
+        {
+            writer.write(" --io-error-- ");
+            writer.close();
+        }
+    }
+
+    private boolean isText(String contentType)
+    {
+        if (contentType == null)
+        {
+            return false;
+        }
+        if (contentType.startsWith("text"))
+        {
+            return true;
+        }
+        if (contentType.indexOf("json") > 0)
+        {
+            return true;
+        }
+        if (contentType.indexOf("javascript") > 0)
+        {
+            return true;
+        }
+        if (contentType.indexOf("xml") > 0)
+        {
+            return true;
+        }
+        
+        return false;
     }
 
 }

@@ -3,6 +3,7 @@ package com.reucon.commons.web.exception;
 import com.reucon.commons.web.exception.model.ExceptionReport;
 import com.reucon.commons.web.exception.storage.FilesystemStorage;
 import com.reucon.commons.web.exception.storage.MemoryStorage;
+import java.io.ByteArrayOutputStream;
 import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -15,6 +16,7 @@ import org.springframework.mock.web.MockHttpSession;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.greaterThan;
 import org.junit.Ignore;
 
 public class ExceptionReportGeneratorTest
@@ -24,8 +26,9 @@ public class ExceptionReportGeneratorTest
     private Date date;
     private String exceptionId;
     private Exception exception;
-    private CharArrayWriter writer;
     private MemoryStorage storage;
+    private CharArrayWriter writer;
+    private ByteArrayOutputStream payloadOutputStream;
 
     @Before
     public void setUp() throws Exception
@@ -47,9 +50,9 @@ public class ExceptionReportGeneratorTest
         reportGenerator.writeExceptionReport(storage, report, exception);
         
         writer = storage.getLastReport().exceptionMetadataWriter();
+        payloadOutputStream = storage.getLastReport().exceptionPayloadOutputStream();
     }
     
-    @Ignore
     @Test
     public void filesystemWrite() throws Exception
     {
@@ -162,6 +165,20 @@ public class ExceptionReportGeneratorTest
         
         assertThat(report, containsString("sessionAttribute 1: value1"));
         assertThat(report, containsString("sessionAttribute 2: value2"));
+    }
+    
+    @Test
+    public void payloadIsWritten() throws Exception
+    {
+        final String demoContent = "This is the demo content. \n123\nend of demo content.";
+        
+        httpServletRequest.setContent(demoContent.getBytes());
+        httpServletRequest.setContentType("text/plain");
+        
+        writeExceptionReport();
+
+        String result = new String(payloadOutputStream.toByteArray());
+        assertThat("Wrong length '" +result +"'" , result.length(), greaterThan(64));
     }
     
 }

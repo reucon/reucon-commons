@@ -436,7 +436,16 @@ public class ExceptionReport implements Serializable
     {
         this.sessionMaxInactiveInterval = sessionMaxInactiveInterval;
     }
-    
+
+    public InputStream getInputStream()
+    {
+        return inputStream;
+    }
+
+    public void setInputStream(InputStream inputStream)
+    {
+        this.inputStream = inputStream;
+    }
 
     /**
      * Creates a new exception id for the given request. The id is made of the
