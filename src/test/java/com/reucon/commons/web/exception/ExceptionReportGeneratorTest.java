@@ -170,7 +170,7 @@ public class ExceptionReportGeneratorTest
     @Test
     public void payloadIsWritten() throws Exception
     {
-        final String demoContent = "This is the demo content. \n123\nend of demo content.";
+        final String demoContent = "This is the demo content. \n123\nend of demo content. This content should be written to a file.";
         
         httpServletRequest.setContent(demoContent.getBytes());
         httpServletRequest.setContentType("text/plain");
