@@ -159,20 +159,12 @@ public class StringExceptionRenderer
 
     void writePayload(OutputStream os, ExceptionReport exceptionReport) throws IOException
     {
-        Writer writer = new OutputStreamWriter(os);
-        writer.write("Request Payload:\n\n");
-        writer.flush();
+        final Writer writer = new OutputStreamWriter(os);
 
         final InputStream inputStream = exceptionReport.getInputStream();
         if(inputStream == null)
         {
             writer.write("--null--");
-            writer.close();
-            return;
-        }
-        if (!isText(exceptionReport.getContentType()))
-        {
-            writer.write("@binary@");
             writer.close();
             return;
         }
@@ -189,34 +181,17 @@ public class StringExceptionRenderer
         catch (IOException ex)
         {
             writer.write(" --io-error-- ");
-            writer.close();
+        }
+        finally
+        {
+            try
+            {
+                writer.close();
+            }
+            catch (IOException e)
+            {
+                writer.close();
+            }
         }
     }
-
-    private boolean isText(String contentType)
-    {
-        if (contentType == null)
-        {
-            return false;
-        }
-        if (contentType.startsWith("text"))
-        {
-            return true;
-        }
-        if (contentType.indexOf("json") > 0)
-        {
-            return true;
-        }
-        if (contentType.indexOf("javascript") > 0)
-        {
-            return true;
-        }
-        if (contentType.indexOf("xml") > 0)
-        {
-            return true;
-        }
-        
-        return false;
-    }
-
 }
