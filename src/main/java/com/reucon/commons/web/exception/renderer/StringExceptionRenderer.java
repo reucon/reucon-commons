@@ -170,6 +170,7 @@ public class StringExceptionRenderer
         }
         try
         {
+            inputStream.reset();
             int read = 0;
             byte[] bytes = new byte[1024];
 
@@ -181,6 +182,9 @@ public class StringExceptionRenderer
         catch (IOException ex)
         {
             writer.write(" --io-error-- ");
+            writer.write(ex.getMessage());
+            writer.write("\n\n");
+            ex.printStackTrace(new PrintWriter(writer));
         }
         finally
         {

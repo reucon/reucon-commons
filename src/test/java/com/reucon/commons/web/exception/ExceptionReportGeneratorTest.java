@@ -17,7 +17,6 @@ import org.springframework.mock.web.MockHttpSession;
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.greaterThan;
-import org.junit.Ignore;
 
 public class ExceptionReportGeneratorTest
 {

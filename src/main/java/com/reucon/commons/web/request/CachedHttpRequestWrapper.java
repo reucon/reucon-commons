@@ -15,7 +15,7 @@ public class CachedHttpRequestWrapper extends HttpServletRequestWrapper
 {
     private final byte[] bytes;
 
-    private CachedHttpRequestWrapper(HttpServletRequest request) throws IOException
+    public CachedHttpRequestWrapper(HttpServletRequest request) throws IOException
     {
         super(request);
         final ByteArrayOutputStream bos = new ByteArrayOutputStream();

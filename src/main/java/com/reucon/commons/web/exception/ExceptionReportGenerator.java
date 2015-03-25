@@ -11,12 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.util.ClassUtils;
 
 /**
- * Writes an exception report providing details about the exception and the
- * {@linkplain HttpServletRequest} to the log directory. A unique exception id
- * is generated that is used as filename and can be exposed to the user to
- * provide a reference when contacting support.
+ * Writes an exception report providing details about the exception and the {@linkplain HttpServletRequest} to the log directory.
+ * A unique exception id is generated that is used as filename and can be exposed to the user to provide a reference when
+ * contacting support.
  * <p>
  * The exception report contains the following information:
  * <ul>
@@ -28,6 +28,9 @@ import org.apache.commons.logging.LogFactory;
  */
 public class ExceptionReportGenerator
 {
+    private final boolean jackson2Present = ClassUtils.isPresent("com.fasterxml.jackson.databind.ObjectMapper", getClass().getClassLoader() ) && ClassUtils.isPresent("com.fasterxml.jackson.core.JsonGenerator", getClass().getClassLoader());
+    private final boolean jacksonPresent = ClassUtils.isPresent("org.codehaus.jackson.map.ObjectMapper", getClass().getClassLoader() ) && ClassUtils.isPresent("org.codehaus.jackson.JsonGenerator", getClass().getClassLoader() );
+    
     private final Log logger = LogFactory.getLog(getClass());
     private FilesystemStorage storage = new FilesystemStorage();
 
@@ -35,23 +38,22 @@ public class ExceptionReportGenerator
     {
         this.storage = storage;
     }
-    
+
     public void setLogDirectory(String logDirectory)
     {
         storage.setLogDirectory(logDirectory);
     }
-    
+
     /**
-     * Writes an exception report for the given exception and request and
-     * returns the exception id.
-     * 
+     * Writes an exception report for the given exception and request and returns the exception id.
+     *
      * @param ex exception to write the exception report for
      * @param request request to write the exception report for
      * @return the generated exception id.
      */
     public String writeExceptionReport(Exception ex, HttpServletRequest request)
     {
-        
+
         final ExceptionReport exceptionReport = new ExceptionReport(ex, request);
         try
         {
@@ -66,10 +68,10 @@ public class ExceptionReportGenerator
     String writeExceptionReport(final ExceptionStorage storage, final ExceptionReport exceptionReport, Exception ex) throws IOException
     {
         final StringExceptionRenderer exceptionRenderer = determineRenderer(exceptionReport);
-        final ExceptionStorageEntry report  = exceptionRenderer.render(exceptionReport, storage);
-        
+        final ExceptionStorageEntry report = exceptionRenderer.render(exceptionReport, storage);
+
         final String writtenToDirectoryName = report.location();
-        
+
         if (writtenToDirectoryName != null)
         {
             logger.info("Exception report " + exceptionReport.getId() + " successfully written to " + writtenToDirectoryName + " for: "
@@ -82,9 +84,17 @@ public class ExceptionReportGenerator
 
         return exceptionReport.getId();
     }
-    
+
     StringExceptionRenderer determineRenderer(ExceptionReport exceptionReport)
     {
+        if (! jackson2Present && ! jacksonPresent)
+        {
+            return new StringExceptionRenderer();
+        }
+        //todo, jackson
         return new StringExceptionRenderer();
     }
+
+    
+
 }
