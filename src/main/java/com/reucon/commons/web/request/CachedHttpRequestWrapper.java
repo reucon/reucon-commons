@@ -23,6 +23,11 @@ public class CachedHttpRequestWrapper extends HttpServletRequestWrapper
         this.bytes = bos.toByteArray();
     }
 
+    public byte[] getBytes()
+    {
+        return bytes;
+    }
+    
     @Override
     public ServletInputStream getInputStream() throws IOException
     {

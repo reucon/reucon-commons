@@ -12,6 +12,10 @@ import org.springframework.web.filter.GenericFilterBean;
 
 public class InputStreamPreservingRequestFilter extends GenericFilterBean
 {
+    /**
+     * Name of the attribute to get hold of the request content
+     */
+    public static final String REQUEST_ATTRIBUTE = "com.reucon.commons.web.filter.preservedInputStream";
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException
@@ -19,13 +23,9 @@ public class InputStreamPreservingRequestFilter extends GenericFilterBean
         final HttpServletRequest request = (HttpServletRequest) req;
         final HttpServletResponse response = (HttpServletResponse) res;
         
-        if (!"POST".equals(request.getMethod()))
-        {
-            chain.doFilter(request, response);
-            return;
-        }
-        
         final CachedHttpRequestWrapper wrappedRequest = new CachedHttpRequestWrapper(request);
+        
+        wrappedRequest.setAttribute(REQUEST_ATTRIBUTE, wrappedRequest.getBytes());
 
         chain.doFilter(wrappedRequest, response);
     }
