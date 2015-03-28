@@ -61,6 +61,7 @@ public class ExceptionReportGenerator
         }
         catch (IOException e)
         {
+            logger.warn("Unable to write exception report " + exceptionReport.getId(), e);
             return null;
         }
     }
