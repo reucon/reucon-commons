@@ -2,7 +2,6 @@ package com.reucon.commons.web.exception.renderer;
 
 import com.reucon.commons.web.exception.model.ExceptionReport;
 import com.reucon.commons.web.filter.InputStreamPreservingRequestFilter;
-import com.reucon.commons.web.request.CachedHttpRequestWrapper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -54,6 +55,7 @@ public class ExceptionReport implements Serializable
     private Map<String, Object> sessionAttributes;
     
     transient private InputStream inputStream;
+    private Date date;
             
     public ExceptionReport(Throwable exception, HttpServletRequest request)
     {
@@ -445,6 +447,16 @@ public class ExceptionReport implements Serializable
     public void setInputStream(InputStream inputStream)
     {
         this.inputStream = inputStream;
+    }
+
+    public void setDate(Date date)
+    {
+        this.date = date;
+    }
+
+    public Date getDate()
+    {
+        return date;
     }
 
     /**

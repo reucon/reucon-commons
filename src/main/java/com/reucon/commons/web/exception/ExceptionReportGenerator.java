@@ -2,6 +2,8 @@ package com.reucon.commons.web.exception;
 
 import com.reucon.commons.web.exception.storage.FilesystemStorage;
 import com.reucon.commons.web.exception.model.ExceptionReport;
+import com.reucon.commons.web.exception.renderer.AbstractExceptionRenderer;
+import com.reucon.commons.web.exception.renderer.JacksonExceptionRenderer;
 import com.reucon.commons.web.exception.renderer.StringExceptionRenderer;
 import com.reucon.commons.web.exception.storage.ExceptionStorage;
 import com.reucon.commons.web.exception.storage.ExceptionStorageEntry;
@@ -28,8 +30,7 @@ import org.springframework.util.ClassUtils;
  */
 public class ExceptionReportGenerator
 {
-    private final boolean jackson2Present = ClassUtils.isPresent("com.fasterxml.jackson.databind.ObjectMapper", getClass().getClassLoader() ) && ClassUtils.isPresent("com.fasterxml.jackson.core.JsonGenerator", getClass().getClassLoader());
-    private final boolean jacksonPresent = ClassUtils.isPresent("org.codehaus.jackson.map.ObjectMapper", getClass().getClassLoader() ) && ClassUtils.isPresent("org.codehaus.jackson.JsonGenerator", getClass().getClassLoader() );
+    private boolean jackson2Present = ClassUtils.isPresent("com.fasterxml.jackson.databind.ObjectMapper", getClass().getClassLoader() ) && ClassUtils.isPresent("com.fasterxml.jackson.core.JsonGenerator", getClass().getClassLoader());
     
     private final Log logger = LogFactory.getLog(getClass());
     private FilesystemStorage storage = new FilesystemStorage();
@@ -45,6 +46,15 @@ public class ExceptionReportGenerator
     }
 
     /**
+     * This should never be used outside of test cases.
+     * @param jackson2Present 
+     */
+    public void setJackson2Present(boolean jackson2Present)
+    {
+        this.jackson2Present = jackson2Present;
+    }
+    
+    /**
      * Writes an exception report for the given exception and request and returns the exception id.
      *
      * @param ex exception to write the exception report for
@@ -59,7 +69,7 @@ public class ExceptionReportGenerator
         {
             return writeExceptionReport(storage, exceptionReport, ex);
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             logger.warn("Unable to write exception report " + exceptionReport.getId(), e);
             return null;
@@ -68,9 +78,9 @@ public class ExceptionReportGenerator
 
     String writeExceptionReport(final ExceptionStorage storage, final ExceptionReport exceptionReport, Exception ex) throws IOException
     {
-        final StringExceptionRenderer exceptionRenderer = determineRenderer(exceptionReport);
+        final AbstractExceptionRenderer exceptionRenderer = determineRenderer(exceptionReport);
         final ExceptionStorageEntry report = exceptionRenderer.render(exceptionReport, storage);
-
+        
         final String writtenToDirectoryName = report.location();
 
         if (writtenToDirectoryName != null)
@@ -86,16 +96,12 @@ public class ExceptionReportGenerator
         return exceptionReport.getId();
     }
 
-    StringExceptionRenderer determineRenderer(ExceptionReport exceptionReport)
+    AbstractExceptionRenderer determineRenderer(ExceptionReport exceptionReport)
     {
-        if (! jackson2Present && ! jacksonPresent)
+        if (! jackson2Present)
         {
             return new StringExceptionRenderer();
         }
-        //todo, jackson
-        return new StringExceptionRenderer();
-    }
-
-    
-
+        return new JacksonExceptionRenderer();
+    }    
 }

@@ -6,8 +6,6 @@ import com.reucon.commons.web.exception.storage.MemoryStorage;
 import java.io.ByteArrayOutputStream;
 import java.io.CharArrayWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,7 +20,6 @@ public class ExceptionReportGeneratorTest
 {
     private ExceptionReportGenerator reportGenerator;
     private MockHttpServletRequest httpServletRequest;
-    private Date date;
     private String exceptionId;
     private Exception exception;
     private MemoryStorage storage;
@@ -32,10 +29,11 @@ public class ExceptionReportGeneratorTest
     @Before
     public void setUp() throws Exception
     {
-        this.reportGenerator = new ExceptionReportGenerator();
-        this.httpServletRequest = new MockHttpServletRequest();
+        reportGenerator = new ExceptionReportGenerator();
+        reportGenerator.setJackson2Present(false);
         
-        date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2000-01-02 01:02:03");
+        httpServletRequest = new MockHttpServletRequest();
+        
         exception = new Exception("sample exception");
         exceptionId = "ID:123:456";
         
