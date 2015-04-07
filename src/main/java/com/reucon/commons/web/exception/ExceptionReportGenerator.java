@@ -47,7 +47,7 @@ public class ExceptionReportGenerator
 
     /**
      * This should never be used outside of test cases.
-     * @param jackson2Present 
+     * @param jackson2Present whether jackson is present
      */
     public void setJackson2Present(boolean jackson2Present)
     {

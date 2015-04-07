@@ -116,6 +116,7 @@ public class MdcInsertingServletFilter implements Filter
 
     /**
      * Override this method to insert additional properties into MDC.
+     * @param request servlet request
      */
     protected void insertAdditionalProperties(HttpServletRequest request)
     {

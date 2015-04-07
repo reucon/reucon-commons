@@ -20,7 +20,7 @@ public class CheckJvmVersion extends AbstractEnvironmentCheck
     }
 
     /**
-     * Sets whether to allow early access version of JDK.<br/>
+     * Sets whether to allow early access version of JDK.
      * Default is <code>false</code>.
      *
      * @param allowEarlyAccess <code>true</code> to allow early access version, <code>false</code> to disallow them.

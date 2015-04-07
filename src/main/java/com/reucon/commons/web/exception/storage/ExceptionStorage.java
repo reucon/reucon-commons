@@ -7,9 +7,9 @@ public abstract class ExceptionStorage
 {
     /**
      * Provides access to the storage for an exception report.
-     * @param exceptionReport
+     * @param exceptionReport exception report to store
      * @return an ExceptionStorageEntry where the exception report can be stored
-     * @throws IOException 
+     * @throws IOException in case the storage encounters an io exception
      */
     public abstract ExceptionStorageEntry allocate(ExceptionReport exceptionReport) throws IOException;
 }

@@ -65,6 +65,7 @@ public class SpringExceptionReportGenerator extends SimpleMappingExceptionResolv
      * <code>null</code> for not exposing an exception id attribute at all.
      * 
      * @see #DEFAULT_EXCEPTION_ID_ATTRIBUTE
+     * @param exceptionIdAttribute name of the model attribute to expose the exception id
      */
     public void setExceptionIdAttribute(String exceptionIdAttribute)
     {
@@ -79,6 +80,7 @@ public class SpringExceptionReportGenerator extends SimpleMappingExceptionResolv
      * <code>null</code> for not exposing a stack trace attribute at all.
      * 
      * @see #DEFAULT_STACK_TRACE_ATTRIBUTE
+     * @param stacktraceAttribute name of the model attribute to expose the stacktrace
      */
     public void setStackTraceAttribute(String stacktraceAttribute)
     {
