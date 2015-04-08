@@ -36,7 +36,8 @@ public class JacksonExceptionRenderer extends AbstractExceptionRenderer
         "classLoader",
         "beanFactory",
         "beanClassLoader",
-        "inputStream"
+        "inputStream",
+        "servletContext"
 //            "requestAttributes",
 //            "sessionAttributes"
     };
