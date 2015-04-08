@@ -49,7 +49,7 @@ public class FilesystemStorage extends ExceptionStorage
                 exceptionsDir.mkdirs();
             }
             
-            final String filename = exceptionReport.getId() + ".log";
+            final String filename = exceptionReport.getId();
             final FilesystemStorageEntry filesystemStorageEntry = new FilesystemStorageEntry(dirname, filename);
             return filesystemStorageEntry;
             
