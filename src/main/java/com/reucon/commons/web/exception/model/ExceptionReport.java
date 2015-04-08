@@ -20,7 +20,8 @@ public class ExceptionReport implements Serializable
 {
     private static final long serialVersionUID = 3L;
     private String id;
-    private Throwable exception;
+    transient private Throwable exception;
+    private String exceptionMessage;
 
     private String remoteAddress;
     private String remoteHost;
@@ -66,6 +67,10 @@ public class ExceptionReport implements Serializable
     {
         this.id = id;
         this.exception = exception;
+        if(exception != null)
+        {
+            exceptionMessage = exception.getMessage();
+        }
         
         remoteAddress = request.getRemoteAddr();
         remoteHost = request.getRemoteHost();
@@ -157,6 +162,16 @@ public class ExceptionReport implements Serializable
     public void setException(Throwable exception)
     {
         this.exception = exception;
+    }
+
+    public void setExceptionMessage(String exceptionMessage)
+    {
+        this.exceptionMessage = exceptionMessage;
+    }
+
+    public String getExceptionMessage()
+    {
+        return exceptionMessage;
     }
 
     public String getRemoteAddress()
