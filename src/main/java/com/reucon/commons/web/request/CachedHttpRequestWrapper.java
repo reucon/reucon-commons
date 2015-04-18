@@ -20,13 +20,14 @@ import org.springframework.web.util.WebUtils;
 public class CachedHttpRequestWrapper extends HttpServletRequestWrapper
 {
     private static final String FORM_CONTENT_TYPE = "application/x-www-form-urlencoded";
+    private static final String MULTIPART_CONTENT_TYPE = "multipart/form-data";
     private final byte[] bytes;
 
     public CachedHttpRequestWrapper(HttpServletRequest request) throws IOException
     {
         super(request);
         final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        if (!isFormPost())
+        if (!isFormPost() && !isMultiPart())
         {
             FileCopyUtils.copy(request.getInputStream(), bos);
             this.bytes = bos.toByteArray();
@@ -62,6 +63,11 @@ public class CachedHttpRequestWrapper extends HttpServletRequestWrapper
     private boolean isFormPost()
     {
         return (getContentType() != null && getContentType().contains(FORM_CONTENT_TYPE) && METHOD_POST.equalsIgnoreCase(getMethod()));
+    }
+    
+    private boolean isMultiPart()
+    {
+        return (getContentType() != null && getContentType().contains(MULTIPART_CONTENT_TYPE) && METHOD_POST.equalsIgnoreCase(getMethod()));
     }
     
     private void writeRequestParamsToContent(ByteArrayOutputStream bos)
